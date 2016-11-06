@@ -38,9 +38,9 @@ int tcp_client(FileRequest request) {
   memset(&serv_addr, '0', sizeof(serv_addr));
 
   serv_addr.sin_family = AF_INET;
-  serv_addr.sin_port = htons(2000);
+  serv_addr.sin_port = htons(request.port);
 
-  if (inet_pton(AF_INET, "127.0.0.2", &serv_addr.sin_addr) <= 0)
+  if (inet_pton(AF_INET, request.host, &serv_addr.sin_addr) <= 0)
   {
     printf("\nError: inet_pton return an error \n");
     return 1;
@@ -53,7 +53,7 @@ int tcp_client(FileRequest request) {
   }
 
   /* file operation */
-  FILE *f = fopen("add.txt", "rb");
+  FILE *f = fopen(request.filename, "rb");
   fseek(f, 0, SEEK_END);
   long fsize = ftell(f);
   fseek(f, 0, SEEK_SET);  //same as rewind(f);

@@ -58,7 +58,7 @@ int main() {
   printf("Filename to read from server:\n");
   fgets(request.filename, 64, stdin);
   strtok(request.filename, "\n");
-  
+
   /* Send UDP request to server */
   char buffer[sizeof(FileRequest)];
   memcpy(buffer, &request, sizeof(FileRequest));
@@ -69,7 +69,8 @@ int main() {
 	connfd = accept(listenfd, (struct sockaddr*) NULL, NULL);
   /* Read file from server */
 	read(connfd, recvBuff, sizeof(recvBuff)-1);
-	printf("server: %s\n",recvBuff);
+	printf("server file content:\n");
+  puts(recvBuff);
 	close(connfd);
   /* ---- */
 
