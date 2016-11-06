@@ -24,7 +24,7 @@ int tcp_client(FileRequest request) {
   printf("Host: %s \n", request.host);
   printf("Port: %d \n", request.port);
 
-	sleep(1);
+  sleep(1);
   int sockfd = 0, n = 0;
   char sendBuff[1024];
   struct sockaddr_in serv_addr;
@@ -54,15 +54,20 @@ int tcp_client(FileRequest request) {
 
   /* file operation */
   FILE *f = fopen(request.filename, "rb");
-  fseek(f, 0, SEEK_END);
-  long fsize = ftell(f);
-  fseek(f, 0, SEEK_SET);  //same as rewind(f);
+  char *string;
+  if (fp == NULL) { // file not found
+    strcpy(string, "ERROR: FILE NOT FOUND")
+  } else {
+    fseek(f, 0, SEEK_END);
+    long fsize = ftell(f);
+    fseek(f, 0, SEEK_SET);  //same as rewind(f);
 
-  char *string = malloc(fsize + 1);
-  fread(string, fsize, 1, f);
-  fclose(f);
+    string = malloc(fsize + 1);
+    fread(string, fsize, 1, f);
+    fclose(f);
 
-  string[fsize] = 0;
+    string[fsize] = 0;
+  }
   /* ---- */
 
   write(sockfd, string, strlen(string));
