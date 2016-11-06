@@ -98,7 +98,8 @@ int main() {
     /* Receive request from client */
     nBytes = recvfrom(udpSocket, buffer, 1024, 0,
       (struct sockaddr *) &serverStorage, &addr_size);
-    FileRequest *request = (FileRequest *) buffer;
+    FileRequest request;
+    memcpy(&request, buffer, sizeof(FileRequest));
 
     tcp_client(request);
   }

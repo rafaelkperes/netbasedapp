@@ -48,19 +48,21 @@ int main() {
 
   /* Initialize size variable to be used later on */
   addr_size = sizeof serverAddr;
+  
+  /* Fill request parameters */
+  FileRequest request;
+  strcpy(request.host, "127.0.0.2");
+  request.port = 2000;
 
   /* User input filename */
   printf("Filename to read from server:\n");
   fgets(request.filename, 64, stdin);
   printf("You typed: %s", request.filename);
 
-  /* Fill request parameters */
-  FileRequest request;
-  strcpy(request.host, "127.0.0.2");
-  request.port = 2000;
-
   /* Send UDP request to server */
-  sendto(clientSocket, (char *) request, sizeof(FileRequest),
+  char buffer[sizeof(FileRequest)];
+  memcpy(buffer, &request, sizeof(FileRequest));
+  sendto(clientSocket, buffer, sizeof(FileRequest),
     0, (struct sockaddr *) &serverAddr, addr_size);
 
   /* Wait for server connection */
