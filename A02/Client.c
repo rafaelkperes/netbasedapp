@@ -57,8 +57,8 @@ int main() {
   /* User input filename */
   printf("Filename to read from server:\n");
   fgets(request.filename, 64, stdin);
-  printf("You typed: %s", request.filename);
-
+  strtok(request.filename, "\n");
+  
   /* Send UDP request to server */
   char buffer[sizeof(FileRequest)];
   memcpy(buffer, &request, sizeof(FileRequest));
