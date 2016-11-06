@@ -1,61 +1,82 @@
+/************* UDP SERVER CODE *****************/
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-int tcp_client(char buffer[]){
-	sleep(1);
-    int sockfd = 0, n = 0;
-    char sendBuff[1024];
+typedef struct {
+  char filename[64];
+  char host[64];
+  int port;
+} FileRequest;
 
-    struct sockaddr_in serv_addr;
+int sendFileToClient(char buffer[]);
 
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-    {
-        printf("\n Error : Could not create socket \n");
-        return 1;
-    }
+int sendFileToClient(char buffer[]) {
+  printf("server: %s\n",buffer);
+  return 1;
+}
 
-    memset(&serv_addr, '0', sizeof(serv_addr));
+int tcp_client(FileRequest request) {
+  printf("Filename: %s \n", request.filename);
+  printf("Host: %s \n", request.host);
+  printf("Port: %d \n", request.port);
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(2000);
+  sleep(1);
+  int sockfd = 0, n = 0;
+  char sendBuff[1024];
+  struct sockaddr_in serv_addr;
 
-    if(inet_pton(AF_INET, "127.0.0.2", &serv_addr.sin_addr)<=0)
-    {
-        printf("\n inet_pton error occured\n");
-        return 1;
-    }
+  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+  {
+    printf("\nError: Could not create socket \n");
+    return 1;
+  }
 
-    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-    {
-       printf("\n Errorrr : Connect Failed \n");
-       return 1;
-    }
+  memset(&serv_addr, '0', sizeof(serv_addr));
 
-    ///////////file operation
-    char filename[strlen(buffer)];
-    strcpy(filename, buffer);
-    strtok(filename, "\n");
-    FILE *f = fopen(filename, "rb");
+  serv_addr.sin_family = AF_INET;
+  serv_addr.sin_port = htons(request.port);
+
+  if (inet_pton(AF_INET, request.host, &serv_addr.sin_addr) <= 0)
+  {
+    printf("\nError: inet_pton return an error \n");
+    return 1;
+  }
+
+  if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
+  {
+    printf("\nError: Connect Failed \n");
+    return 1;
+  }
+
+  /* file operation */
+  FILE *f = fopen(request.filename, "rb");
+  char *string;
+  if (f == NULL) { // file not found
+    strcpy(string, "ERROR: FILE NOT FOUND");
+  } else {
     fseek(f, 0, SEEK_END);
     long fsize = ftell(f);
-    fseek(f, 0, SEEK_SET);
+    fseek(f, 0, SEEK_SET);  //same as rewind(f);
 
-    char *string = malloc(fsize + 1);
+    string = malloc(fsize + 1);
     fread(string, fsize, 1, f);
     fclose(f);
 
     string[fsize] = 0;
-    /////////////////////////
-    write(sockfd, string, strlen(string));
-    printf("File sent.\n");
-    close(sockfd);
-    return 0;
+  }
+  /* ---- */
+
+  write(sockfd, string, strlen(string));
+  close(sockfd);
+  return 0;
 }
 
-int main(){
+int main() {
   int udpSocket, nBytes;
   int sent_udp;
   char buffer[1024];
@@ -64,26 +85,30 @@ int main(){
   socklen_t addr_size, client_addr_size;
   int i;
 
+  /* Create UDP socket */
   udpSocket = socket(PF_INET, SOCK_DGRAM, 0);
 
+  /* Configure settings in address struct */
   serverAddr_udp.sin_family = AF_INET;
   serverAddr_udp.sin_port = htons(3000);
   serverAddr_udp.sin_addr.s_addr = inet_addr("127.0.0.1");
   memset(serverAddr_udp.sin_zero, '\0', sizeof serverAddr_udp.sin_zero);
 
+  /* Bind socket with address struct */
   bind(udpSocket, (struct sockaddr *) &serverAddr_udp, sizeof(serverAddr_udp));
 
+  /* Initialize size variable to be used later on */
   addr_size = sizeof serverStorage;
 
-  while(1){
-	printf("UDP Server Running on PORT: 3000 ...\n");
-	nBytes = recvfrom(udpSocket,buffer,1024,0,(struct sockaddr *)&serverStorage, &addr_size);
+  while(1) {
+    /* Receive request from client */
+    nBytes = recvfrom(udpSocket, buffer, 1024, 0,
+      (struct sockaddr *) &serverStorage, &addr_size);
+    FileRequest request;
+    memcpy(&request, buffer, sizeof(FileRequest));
 
-	sendto(udpSocket,buffer,nBytes,0,(struct sockaddr *)&serverStorage,addr_size);
-
-	tcp_client(buffer);
+    tcp_client(request);
   }
 
   return 0;
 }
-
