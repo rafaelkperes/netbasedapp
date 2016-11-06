@@ -19,7 +19,7 @@ int sendFileToClient(char buffer[]) {
 	return 1;
 }
 
-int tcp_client(FileRequest *request) {
+int tcp_client(FileRequest request) {
   printf("Filename: %s \n", request->filename);
   printf("Host: %s \n", request->host);
   printf("Port: %d \n", request->port);
@@ -94,7 +94,7 @@ int main() {
   /* Initialize size variable to be used later on */
   addr_size = sizeof serverStorage;
 
-  while(1){
+  while(1) {
     /* Receive request from client */
     nBytes = recvfrom(udpSocket, buffer, 1024, 0,
       (struct sockaddr *) &serverStorage, &addr_size);
