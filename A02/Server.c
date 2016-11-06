@@ -56,7 +56,7 @@ int tcp_client(FileRequest request) {
   FILE *f = fopen(request.filename, "rb");
   char *string;
   if (fp == NULL) { // file not found
-    strcpy(string, "ERROR: FILE NOT FOUND")
+    strcpy(string, "ERROR: FILE NOT FOUND");
   } else {
     fseek(f, 0, SEEK_END);
     long fsize = ftell(f);
