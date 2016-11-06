@@ -14,25 +14,25 @@ typedef struct {
 
 int main() {
   /* Server Initialize */
-	int listenfd = 0, connfd = 0, n = 0;
-	struct sockaddr_in serv_addr_tcp;
+  int listenfd = 0, connfd = 0, n = 0;
+  struct sockaddr_in serv_addr_tcp;
 
-	char recvBuff[1025];
-	time_t ticks;
+  char recvBuff[1025];
+  time_t ticks;
 
-	listenfd = socket(AF_INET, SOCK_STREAM, 0);
-	memset(&serv_addr_tcp, '0', sizeof(serv_addr_tcp));
+  listenfd = socket(AF_INET, SOCK_STREAM, 0);
+  memset(&serv_addr_tcp, '0', sizeof(serv_addr_tcp));
 
-	serv_addr_tcp.sin_family = AF_INET;
+  serv_addr_tcp.sin_family = AF_INET;
   serv_addr_tcp.sin_port = htons(2000);
-	serv_addr_tcp.sin_addr.s_addr = htonl(INADDR_ANY);	
+  serv_addr_tcp.sin_addr.s_addr = htonl(INADDR_ANY);  
 
-	bind(listenfd, (struct sockaddr*) &serv_addr_tcp, sizeof(serv_addr_tcp));
+  bind(listenfd, (struct sockaddr*) &serv_addr_tcp, sizeof(serv_addr_tcp));
 
-	if (listen(listenfd, 10)) {
+  if (listen(listenfd, 10)) {
     perror("listen failed");
     return 1;
-	}
+  }
   /* ---- */
 
   /* Create UDP socket */
@@ -67,19 +67,19 @@ int main() {
     0, (struct sockaddr *) &serverAddr, addr_size);
 
   /* Wait for server connection */
-	connfd = accept(listenfd, (struct sockaddr*) NULL, NULL);
+  connfd = accept(listenfd, (struct sockaddr*) NULL, NULL);
   /* Read file from server */
-	read(connfd, recvBuff, sizeof(recvBuff)-1);
-	printf("server file content:\n");
+  read(connfd, recvBuff, sizeof(recvBuff)-1);
+  printf("server file content:\n");
   puts(recvBuff);
-	close(connfd);
+  close(connfd);
   /* ---- */
 
-	/* Read into file */
-	FILE *fp;
-	fp = fopen("received_file.txt","w");
-	fprintf(fp, "%s", recvBuff);
-	/* ---- */
+  /* Read into file */
+  FILE *fp;
+  fp = fopen("received_file.txt","w");
+  fprintf(fp, "%s", recvBuff);
+  /* ---- */
 
   return 0;
 }

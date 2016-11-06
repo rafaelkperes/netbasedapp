@@ -16,8 +16,8 @@ typedef struct {
 int sendFileToClient(char buffer[]);
 
 int sendFileToClient(char buffer[]) {
-	printf("server: %s\n",buffer);
-	return 1;
+  printf("server: %s\n",buffer);
+  return 1;
 }
 
 int tcp_client(FileRequest request) {
@@ -112,4 +112,3 @@ int main() {
 
   return 0;
 }
-

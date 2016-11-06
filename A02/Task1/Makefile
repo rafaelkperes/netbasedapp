@@ -7,3 +7,4 @@ all:
 clean:
 	-rm -f Server
 	-rm -f Client
+	-rm -f received_file.txt
