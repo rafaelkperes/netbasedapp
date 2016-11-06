@@ -20,9 +20,9 @@ int sendFileToClient(char buffer[]) {
 }
 
 int tcp_client(FileRequest request) {
-  printf("Filename: %s \n", request->filename);
-  printf("Host: %s \n", request->host);
-  printf("Port: %d \n", request->port);
+  printf("Filename: %s \n", request.filename);
+  printf("Host: %s \n", request.host);
+  printf("Port: %d \n", request.port);
 
 	sleep(1);
   int sockfd = 0, n = 0;
