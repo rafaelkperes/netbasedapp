@@ -1,0 +1,5 @@
+1. 
+
+2. TCP grants delivery and order, which is not provided by UDP. Meaning that, if a file is divided into multiple packets (which is very likely) and one packet is lost on UDP, the file is corrupted; also, if the packets do not arrive in order (which is not guaranted by UDP), you also corrupt the file. So, on application level, we would have to implement both of those functionalities: guaranteeing order - tracking each packet with some ordered id - and arrival - thourgh an application level ACK on each packet, where the server is able to resend lost packets.
+
+3. The server needs to create a thread for attending the client after it 'accept's one client; while the main server thread keeps on only accepting new clients.
