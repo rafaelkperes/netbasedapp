@@ -31,3 +31,7 @@
 # Debug files
 *.dSYM/
 *.su
+A03/T01/all.log
+
+#folders
+.settings/
