@@ -50,13 +50,14 @@ public class App {
     	try {
     		FileWriter f0 = new FileWriter("result.html");
 			while ((line = rd.readLine()) != null) {
-			    System.out.println(line);
+			    //System.out.println(line);
 			    f0.write(line);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    	System.out.println("received html is saved as result.html in the root");
     }
     
     static Socket connect(String host, String path, int port) throws IOException {
