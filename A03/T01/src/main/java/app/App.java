@@ -22,8 +22,7 @@ public class App {
     private static final int DEFAULT_PORT = 80;
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    static void sendGET(String host, Socket socket){
-    	String path = "/index.html";
+    static void sendGET(String host, String path, Socket socket){
     	PrintWriter request = null;
 		try {
 			request = new PrintWriter( socket.getOutputStream() );
@@ -56,11 +55,11 @@ public class App {
 		}
     }
     
-    static Socket connect(String host, int port) throws IOException {
+    static Socket connect(String host, String path, int port) throws IOException {
         LOGGER.log(Level.FINE, "Connecting to: {0}:{1}",
                 new Object[]{host, port});
         Socket clientSocket = new Socket(host, port);
-        sendGET(host, clientSocket);
+        sendGET(host, path, clientSocket);
         return clientSocket;
     }
 
@@ -80,8 +79,7 @@ public class App {
                 port = DEFAULT_PORT;
             }
 
-            Socket sock = connect(url.getHost(), port);
-            System.out.println("connected");
+            Socket sock = connect(url.getHost(), url.getPath(), port);
         }
     }
 

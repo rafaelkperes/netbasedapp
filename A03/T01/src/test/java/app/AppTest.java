@@ -24,20 +24,20 @@ public class AppTest {
         System.out.println("connect");
 
         try {
-            connect("www.google.com", 80);
+            connect("www.google.com", "", 80);
 
         } catch (IOException e) {
             fail("Shouldn't throw exception for invalid host.");
         }
 
         try {
-            connect("www.google.com", 1);
+            connect("www.google.com", "", 1);
             fail("Should throw exception for invalid port.");
         } catch (IOException e) {
         }
 
         try {
-            connect("asdfasf", 80);
+            connect("asdfasf", "", 80);
             fail("Should throw exception for invalid host.");
         } catch (IOException e) {
         }
