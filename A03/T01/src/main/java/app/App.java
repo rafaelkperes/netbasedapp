@@ -1,6 +1,7 @@
 package app;
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -45,9 +46,12 @@ public class App {
     	BufferedReader rd = new BufferedReader(
     	        new InputStreamReader(inStream));
     	String line;
+
     	try {
+    		FileWriter f0 = new FileWriter("result.html");
 			while ((line = rd.readLine()) != null) {
 			    System.out.println(line);
+			    f0.write(line);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
