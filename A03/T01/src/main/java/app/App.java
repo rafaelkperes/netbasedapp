@@ -1,10 +1,13 @@
 package app;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
@@ -13,6 +16,9 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageInputStream;
 
 /**
  * HTTP/1.1
@@ -23,7 +29,7 @@ public class App {
     private static final int DEFAULT_PORT = 80;
     private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    static void sendGET(String host, String path, Socket socket){
+    static void sendGET(String host, String path, Socket socket) throws IOException{
     	PrintWriter request = null;
 		try {
 			request = new PrintWriter( socket.getOutputStream() );
@@ -37,27 +43,25 @@ public class App {
     	request.flush( ); 
     	
     	InputStream inStream = null;
-		try {
-			inStream = socket.getInputStream( );
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		inStream = socket.getInputStream( );
+		
+		////////////////image file receive
+//		ObjectInputStream in = new ObjectInputStream(inStream);
+//		BufferedImage screenshot = ImageIO.read(inStream);
+//		ImageIO.write(screenshot, "jpg", new File("screenshot.jpg"));
+		///////////////////////////////
+		
+		////////////////html file read
     	BufferedReader rd = new BufferedReader(
     	        new InputStreamReader(inStream));
-    	String line;
-
-    	try {
-    		FileWriter f0 = new FileWriter("result.html");
-			while ((line = rd.readLine()) != null) {
-			    //System.out.println(line);
-			    f0.write(line);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    	String line;		
+		FileWriter f0 = new FileWriter("RESULTS\\result.html");
+		while ((line = rd.readLine()) != null) {
+		    //System.out.println(line);
+		    f0.write(line);
 		}
     	System.out.println("received html is saved as result.html in the root");
+    	/////////////////////////////////////
     }
     
     static Socket connect(String host, String path, int port) throws IOException {
