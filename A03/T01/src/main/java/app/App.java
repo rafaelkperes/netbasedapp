@@ -39,14 +39,14 @@ public class App {
 		int lock = 0;
 		boolean letMeWrite = false;
 		
-		File fout = new File("RESULTS/out.html");
+		File fout = new File("RESULTS/out.jpg");
 		FileOutputStream fos = new FileOutputStream(fout);
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
 		
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String line;
 			while ((line = br.readLine()) != null) {
-				if (line.isEmpty()) {
+				if (line.isEmpty() || lock == 1) {
 					lock++;
 					if (lock == 2) {
 						letMeWrite = true;
@@ -56,6 +56,7 @@ public class App {
 				}
 				if (letMeWrite) {
 					System.out.println(line);
+					bw.write(line + "\n");
 				}
 			}
 			bw.close();
@@ -125,7 +126,7 @@ public class App {
 		/////////////////////////////////////
 		in.close();
 		System.out.println("Received what we wanted");
-		//processFile(filename);
+		processFile(filename);
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
