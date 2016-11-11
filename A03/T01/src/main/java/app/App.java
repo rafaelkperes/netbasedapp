@@ -29,114 +29,114 @@ import javax.imageio.stream.ImageInputStream;
  */
 public class App {
 
-    private static final int DEFAULT_PORT = 80;
-    private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+	private static final int DEFAULT_PORT = 80;
+	private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-    static void sendGET(String host, String path, Socket socket) throws IOException{
-    	PrintWriter request = null;
+	static void sendGET(String host, String path, Socket socket) throws IOException {
+		PrintWriter request = null;
 		try {
-			request = new PrintWriter( socket.getOutputStream() );
+			request = new PrintWriter(socket.getOutputStream());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    	request.print(  "GET " + path + " HTTP/1.1\r\n" + 
-    	                       "Host: " + host + "\r\n" + 
-    	                       "Connection: close\r\n\r\n"); 
-    	request.flush( ); 
-    	
-    	InputStream inStream = null;
-		inStream = socket.getInputStream( );
-		
-		String[] c_type_array;
+		request.print("GET " + path + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
+		request.flush();
+
+		InputStream inStream = null;
+		inStream = socket.getInputStream();
+
 		String c_type;
-		c_type_array = path.split("/");
-		c_type = c_type_array[c_type_array.length-1];
-		c_type = c_type.split("\\.")[1];
-		System.out.println(c_type);		////////////////image file receive
-		DataInputStream in = new DataInputStream(socket.getInputStream());
-		OutputStream dos = new FileOutputStream("RESULTS\\testtttt.jpg");
-	    int count;
-	    byte[] buffer = new byte[2048];
-	    boolean eohFound = false;
-	    while ((count = in.read(buffer)) != -1)
-	    {
-	        if(!eohFound){
-	            String string = new String(buffer, 0, count);
-	            int indexOfEOH = string.indexOf("\r\n\r\n");
-	            if(indexOfEOH != -1) {
-	                count = count-indexOfEOH-4;
-	                buffer = string.substring(indexOfEOH+4).getBytes();
-	                eohFound = true;
-	            } else {
-	                count = 0;
-	            }
-	        }
-	      dos.write(buffer, 0, count);
-	      dos.flush();
-	    }
-	    //in.close();
-	    dos.close();
-	    System.out.println("image transfer done");
-		///////////////////////////////
-		
-		////////////////html file read
-//    	BufferedReader rd = new BufferedReader(
-//    	        new InputStreamReader(inStream));
-//    	String line;		
-//		FileWriter f0 = new FileWriter("RESULTS\\result.html");
-//		while ((line = rd.readLine()) != null) {
-//		    //System.out.println(line);
-//		    f0.write(line);
-//		}
-//    	System.out.println("received html is saved as result.html in the root");
-    	/////////////////////////////////////
-    }
-    
-    static Socket connect(String host, String path, int port) throws IOException {
-        LOGGER.log(Level.FINE, "Connecting to: {0}:{1}",
-                new Object[]{host, port});
-        Socket clientSocket = new Socket(host, port);
-        sendGET(host, path, clientSocket);
-        return clientSocket;
-    }
+		try {
+			c_type = path.split("\\.")[1];
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			c_type = "html";
+		}
 
-    static void start(String[] args) throws Exception {
-        LOGGER.log(Level.FINER, "Start called with args: {0}", args);
+		if (c_type.equals("jpg")) {
+			//////////////// image file receive
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			OutputStream dos = new FileOutputStream("RESULTS\\testtttt.jpg");
+			int count;
+			byte[] buffer = new byte[2048];
+			boolean eohFound = false;
+			while ((count = in.read(buffer)) != -1) {
+				if (!eohFound) {
+					String string = new String(buffer, 0, count);
+					int indexOfEOH = string.indexOf("\r\n\r\n");
+					if (indexOfEOH != -1) {
+						count = count - indexOfEOH - 4;
+						buffer = string.substring(indexOfEOH + 4).getBytes();
+						eohFound = true;
+					} else {
+						count = 0;
+					}
+				}
+				dos.write(buffer, 0, count);
+				dos.flush();
+			}
+			// in.close();
+			dos.close();
+			System.out.println("image transfer done");
+			///////////////////////////////
+		} else if (c_type.endsWith("html")) {
+			//////////////// html file read
+			BufferedReader rd = new BufferedReader(new InputStreamReader(inStream));
+			String line;
+			FileWriter f0 = new FileWriter("RESULTS\\result.html");
+			while ((line = rd.readLine()) != null) {
+				// System.out.println(line);
+				f0.write(line);
+			}
+			System.out.println("received html is saved as result.html in the root");
+			/////////////////////////////////////
+		}
+	}
 
-        if (args.length < 1) {
-            throw new Exception("I need an URL to GET.");
-        } else {
-            URL url = new URL(args[0]);
-            LOGGER.log(Level.FINER, "Parsed HOST:", url.getHost());
-            LOGGER.log(Level.FINER, "Parsed PORT:", url.getPort());
+	static Socket connect(String host, String path, int port) throws IOException {
+		LOGGER.log(Level.FINE, "Connecting to: {0}:{1}", new Object[] { host, port });
+		Socket clientSocket = new Socket(host, port);
+		sendGET(host, path, clientSocket);
+		return clientSocket;
+	}
 
-            /* if URL does not contain PORT, set default value */
-            int port = url.getPort();
-            if (port == -1) {
-                port = DEFAULT_PORT;
-            }
+	static void start(String[] args) throws Exception {
+		LOGGER.log(Level.FINER, "Start called with args: {0}", args);
 
-            Socket sock = connect(url.getHost(), url.getPath(), port);
-        }
-    }
+		if (args.length < 1) {
+			throw new Exception("I need an URL to GET.");
+		} else {
+			URL url = new URL(args[0]);
+			LOGGER.log(Level.FINER, "Parsed HOST:", url.getHost());
+			LOGGER.log(Level.FINER, "Parsed PORT:", url.getPort());
 
-    public static void main(String[] args) throws Exception {
-        Handler fh = new FileHandler("./all.log");
-        LOGGER.addHandler(fh);
-        LOGGER.setLevel(Level.FINEST);
-        try {
-            LOGGER.log(Level.FINE, "Main called with args: {0}", args);
-            start(args);
-        } catch (Exception e) {
-            System.out.println("Execution returned an exception:");
-            System.out.println(e.getMessage());
+			/* if URL does not contain PORT, set default value */
+			int port = url.getPort();
+			if (port == -1) {
+				port = DEFAULT_PORT;
+			}
 
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            LOGGER.log(Level.SEVERE, sw.toString());
-        }
-    }
+			Socket sock = connect(url.getHost(), url.getPath(), port);
+		}
+	}
+
+	public static void main(String[] args) throws Exception {
+		Handler fh = new FileHandler("./all.log");
+		LOGGER.addHandler(fh);
+		LOGGER.setLevel(Level.FINEST);
+		try {
+			LOGGER.log(Level.FINE, "Main called with args: {0}", args);
+			start(args);
+		} catch (Exception e) {
+			System.out.println("Execution returned an exception:");
+			System.out.println(e.getMessage());
+
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			LOGGER.log(Level.SEVERE, sw.toString());
+		}
+	}
 
 }
