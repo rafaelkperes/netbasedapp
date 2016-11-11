@@ -43,9 +43,6 @@ public class App {
 		request.print("GET " + path + " HTTP/1.1\r\n" + "Host: " + host + "\r\n" + "Connection: close\r\n\r\n");
 		request.flush();
 
-		InputStream inStream = null;
-		inStream = socket.getInputStream();
-
 		String c_type;
 		try {
 			c_type = path.split("\\.")[1];
@@ -54,36 +51,30 @@ public class App {
 			c_type = "html";
 		}
 
+		int count;
+		byte[] buffer = new byte[2048];
+		DataInputStream in = new DataInputStream(socket.getInputStream());
+		
 		if (c_type.equals("jpg")) {
 			//////////////// image file receive
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			OutputStream dos = new FileOutputStream("RESULTS\\image.jpg");
-			int count;
-			byte[] buffer = new byte[2048];
 		    while ((count = in.read(buffer)) != -1)
 		    {
 		      dos.write(buffer, 0, count);
 		      dos.flush();
-		    }
-		    dos.close();
-			// in.close();
+		    }		    
 			dos.close();
 			System.out.println("received jpg file is saved as image.jpg in the root");		
 		} 
 		///////////////////////////////html file receive
 		else if (c_type.endsWith("html")) {
 			//////////////// html file read
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			OutputStream dos = new FileOutputStream("RESULTS\\html.html");
-			int count;
-			byte[] buffer = new byte[2048];
 		    while ((count = in.read(buffer)) != -1)
 		    {
 		      dos.write(buffer, 0, count);
 		      dos.flush();
 		    }
-		    dos.close();
-			// in.close();
 			dos.close();
 			System.out.println("received html file is saved as html.html in the root");
 		}
@@ -91,21 +82,17 @@ public class App {
 		///////////////////////////////text file receive
 		else if (c_type.endsWith("txt")) {
 			//////////////// html file read
-			DataInputStream in = new DataInputStream(socket.getInputStream());
 			OutputStream dos = new FileOutputStream("RESULTS\\text.html");
-			int count;
-			byte[] buffer = new byte[2048];
 		    while ((count = in.read(buffer)) != -1)
 		    {
 		      dos.write(buffer, 0, count);
 		      dos.flush();
 		    }
 		    dos.close();
-			// in.close();
-			dos.close();
 			System.out.println("received text file is saved as text.txt in the root");
 		}
 		/////////////////////////////////////
+		in.close();
 		System.out.println("Received what we wanted");
 	}
 
