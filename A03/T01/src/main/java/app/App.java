@@ -48,17 +48,34 @@ public class App {
     	InputStream inStream = null;
 		inStream = socket.getInputStream( );
 		
+		String[] c_type_array;
 		String c_type;
-		////////////////image file receive
+		c_type_array = path.split("/");
+		c_type = c_type_array[c_type_array.length-1];
+		c_type = c_type.split("\\.")[1];
+		System.out.println(c_type);		////////////////image file receive
 		DataInputStream in = new DataInputStream(socket.getInputStream());
 		OutputStream dos = new FileOutputStream("RESULTS\\testtttt.jpg");
 	    int count;
 	    byte[] buffer = new byte[2048];
+	    boolean eohFound = false;
 	    while ((count = in.read(buffer)) != -1)
 	    {
+	        if(!eohFound){
+	            String string = new String(buffer, 0, count);
+	            int indexOfEOH = string.indexOf("\r\n\r\n");
+	            if(indexOfEOH != -1) {
+	                count = count-indexOfEOH-4;
+	                buffer = string.substring(indexOfEOH+4).getBytes();
+	                eohFound = true;
+	            } else {
+	                count = 0;
+	            }
+	        }
 	      dos.write(buffer, 0, count);
 	      dos.flush();
 	    }
+	    //in.close();
 	    dos.close();
 	    System.out.println("image transfer done");
 		///////////////////////////////
