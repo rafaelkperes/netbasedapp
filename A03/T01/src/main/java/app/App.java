@@ -68,9 +68,10 @@ public class App {
 		    dos.close();
 			// in.close();
 			dos.close();
-			System.out.println("image transfer done");
-			///////////////////////////////
-		} else if (c_type.endsWith("html")) {
+			System.out.println("image transfer done");		
+		} 
+		///////////////////////////////html file receive
+		else if (c_type.endsWith("html")) {
 			//////////////// html file read
 			BufferedReader rd = new BufferedReader(new InputStreamReader(inStream));
 			String line;
@@ -80,8 +81,21 @@ public class App {
 				f0.write(line);
 			}
 			System.out.println("received html is saved as result.html in the root");
-			/////////////////////////////////////
 		}
+		/////////////////////////////////////
+		///////////////////////////////text file receive
+		else if (c_type.endsWith("txt")) {
+			//////////////// html file read
+			BufferedReader rd = new BufferedReader(new InputStreamReader(inStream));
+			String line;
+			FileWriter f0 = new FileWriter("RESULTS\\result.txt");
+			while ((line = rd.readLine()) != null) {
+				// System.out.println(line);
+				f0.write(line);
+			}
+			System.out.println("received html is saved as result.html in the root");
+		}
+		/////////////////////////////////////
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
