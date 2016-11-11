@@ -2,6 +2,7 @@ package app;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
@@ -36,6 +38,11 @@ public class App {
 	public static void processFile(String file) throws IOException {
 		int lock = 0;
 		boolean letMeWrite = false;
+		
+		File fout = new File("RESULTS/out.html");
+		FileOutputStream fos = new FileOutputStream(fout);
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+		
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String line;
 			while ((line = br.readLine()) != null) {
@@ -51,6 +58,7 @@ public class App {
 					System.out.println(line);
 				}
 			}
+			bw.close();
 		}
 	}
 
@@ -117,7 +125,7 @@ public class App {
 		/////////////////////////////////////
 		in.close();
 		System.out.println("Received what we wanted");
-		processFile(filename);
+		//processFile(filename);
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
