@@ -35,34 +35,6 @@ public class App {
 	private static final int DEFAULT_PORT = 80;
 	private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
-	public static void processFile(String file) throws IOException {
-		int lock = 0;
-		boolean letMeWrite = false;
-		
-		File fout = new File("RESULTS/out.jpg");
-		FileOutputStream fos = new FileOutputStream(fout);
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-		
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				if (line.isEmpty() || lock == 1) {
-					lock++;
-					if (lock == 2) {
-						letMeWrite = true;
-						lock++;
-						continue;
-					}
-				}
-				if (letMeWrite) {
-					System.out.println(line);
-					bw.write(line + "\n");
-				}
-			}
-			bw.close();
-		}
-	}
-
 	static void sendGET(String host, String path, Socket socket) throws IOException {
 		PrintWriter request = null;
 		String filename = "";
@@ -83,7 +55,7 @@ public class App {
 			c_type = "html";
 		}
 
-		int count;
+		int count, offset;
 		byte[] buffer = new byte[2048];
 		DataInputStream in = new DataInputStream(socket.getInputStream());
 
@@ -92,37 +64,51 @@ public class App {
 			filename = "RESULTS\\image.jpg";
 			OutputStream dos = new FileOutputStream(filename);
 			boolean eohFound = false;
-			while ((count = in.read(buffer)) != -1) {
-				if (!eohFound) {
-					String string = new String(buffer, 0, count);
-					int indexOfEOH = string.indexOf("\r\n\r\n");
-					if (indexOfEOH != -1) {
-						count = count - indexOfEOH - 4;
-						buffer = string.substring(indexOfEOH + 4).getBytes();
-						eohFound = true;
-					} else {
-						count = 0;
-					}
-				}
-				dos.write(buffer, 0, count);
-				dos.flush();
+			while ((count = in.read(buffer)) != -1)
+			{
+			    offset = 0;
+			    if(!eohFound){
+			        String string = new String(buffer, 0, count);
+			        int indexOfEOH = string.indexOf("\r\n\r\n");
+			        if(indexOfEOH != -1) {
+			            count = count-indexOfEOH-4;
+			            offset = indexOfEOH+4;
+			            eohFound = true;
+			        } else {
+			            count = 0;
+			        }
+			    }
+			  dos.write(buffer, offset, count);
+			  dos.flush();
 			}
-			in.close();
 			dos.close();
-
-			System.out.println("received jpg file is saved as image.jpg in the root");
+			System.out.println("received jpg file is saved as image.jpg in RESULTS/");
 		}
 		/////////////////////////////// html file receive
 		else if (c_type.endsWith("html")) {
 			//////////////// html file read
 			filename = "RESULTS\\html.html";
 			OutputStream dos = new FileOutputStream(filename);
-			while ((count = in.read(buffer)) != -1) {
-				dos.write(buffer, 0, count);
-				dos.flush();
+			boolean eohFound = false;
+			while ((count = in.read(buffer)) != -1)
+			{
+			    offset = 0;
+			    if(!eohFound){
+			        String string = new String(buffer, 0, count);
+			        int indexOfEOH = string.indexOf("\r\n\r\n");
+			        if(indexOfEOH != -1) {
+			            count = count-indexOfEOH-4;
+			            offset = indexOfEOH+4;
+			            eohFound = true;
+			        } else {
+			            count = 0;
+			        }
+			    }
+			  dos.write(buffer, offset, count);
+			  dos.flush();
 			}
 			dos.close();
-			System.out.println("received html file is saved as html.html in the root");
+			System.out.println("received html file is saved as html.html in RESULTS/");
 		}
 		/////////////////////////////////////
 		/////////////////////////////// text file receive
@@ -130,17 +116,29 @@ public class App {
 			//////////////// html file read
 			filename = "RESULTS\\text.html";
 			OutputStream dos = new FileOutputStream(filename);
-			while ((count = in.read(buffer)) != -1) {
-				dos.write(buffer, 0, count);
-				dos.flush();
+			boolean eohFound = false;
+			while ((count = in.read(buffer)) != -1)
+			{
+			    offset = 0;
+			    if(!eohFound){
+			        String string = new String(buffer, 0, count);
+			        int indexOfEOH = string.indexOf("\r\n\r\n");
+			        if(indexOfEOH != -1) {
+			            count = count-indexOfEOH-4;
+			            offset = indexOfEOH+4;
+			            eohFound = true;
+			        } else {
+			            count = 0;
+			        }
+			    }
+			  dos.write(buffer, offset, count);
+			  dos.flush();
 			}
 			dos.close();
-			System.out.println("received text file is saved as text.txt in the root");
+			System.out.println("received text file is saved as text.txt in RESULTS/");
 		}
 		/////////////////////////////////////
 		in.close();
-		System.out.println("Received what we wanted");
-		processFile(filename);
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
@@ -189,23 +187,3 @@ public class App {
 	}
 
 }
-
-// boolean eohFound = false;
-// while ((count = in.read(buffer)) != -1)
-// {
-// if(!eohFound){
-// String string = new String(buffer, 0, count);
-// int indexOfEOH = string.indexOf("\r\n\r\n");
-// if(indexOfEOH != -1) {
-// count = count-indexOfEOH-4;
-// buffer = string.substring(indexOfEOH+4).getBytes();
-// eohFound = true;
-// } else {
-// count = 0;
-// }
-// }
-// dos.write(buffer, 0, count);
-// dos.flush();
-// }
-// in.close();
-// dos.close();
