@@ -2,12 +2,15 @@ package app;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.Socket;
@@ -45,22 +48,31 @@ public class App {
     	InputStream inStream = null;
 		inStream = socket.getInputStream( );
 		
+		String c_type;
 		////////////////image file receive
-//		ObjectInputStream in = new ObjectInputStream(inStream);
-//		BufferedImage screenshot = ImageIO.read(inStream);
-//		ImageIO.write(screenshot, "jpg", new File("screenshot.jpg"));
+		DataInputStream in = new DataInputStream(socket.getInputStream());
+		OutputStream dos = new FileOutputStream("RESULTS\\testtttt.jpg");
+	    int count;
+	    byte[] buffer = new byte[2048];
+	    while ((count = in.read(buffer)) != -1)
+	    {
+	      dos.write(buffer, 0, count);
+	      dos.flush();
+	    }
+	    dos.close();
+	    System.out.println("image transfer done");
 		///////////////////////////////
 		
 		////////////////html file read
-    	BufferedReader rd = new BufferedReader(
-    	        new InputStreamReader(inStream));
-    	String line;		
-		FileWriter f0 = new FileWriter("RESULTS\\result.html");
-		while ((line = rd.readLine()) != null) {
-		    //System.out.println(line);
-		    f0.write(line);
-		}
-    	System.out.println("received html is saved as result.html in the root");
+//    	BufferedReader rd = new BufferedReader(
+//    	        new InputStreamReader(inStream));
+//    	String line;		
+//		FileWriter f0 = new FileWriter("RESULTS\\result.html");
+//		while ((line = rd.readLine()) != null) {
+//		    //System.out.println(line);
+//		    f0.write(line);
+//		}
+//    	System.out.println("received html is saved as result.html in the root");
     	/////////////////////////////////////
     }
     
