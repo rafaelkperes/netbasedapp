@@ -57,7 +57,7 @@ public class App {
 		if (c_type.equals("jpg")) {
 			//////////////// image file receive
 			DataInputStream in = new DataInputStream(socket.getInputStream());
-			OutputStream dos = new FileOutputStream("RESULTS\\testtttt.jpg");
+			OutputStream dos = new FileOutputStream("RESULTS\\image.jpg");
 			int count;
 			byte[] buffer = new byte[2048];
 		    while ((count = in.read(buffer)) != -1)
@@ -68,34 +68,45 @@ public class App {
 		    dos.close();
 			// in.close();
 			dos.close();
-			System.out.println("image transfer done");		
+			System.out.println("received jpg file is saved as image.jpg in the root");		
 		} 
 		///////////////////////////////html file receive
 		else if (c_type.endsWith("html")) {
 			//////////////// html file read
-			BufferedReader rd = new BufferedReader(new InputStreamReader(inStream));
-			String line;
-			FileWriter f0 = new FileWriter("RESULTS\\result.html");
-			while ((line = rd.readLine()) != null) {
-				// System.out.println(line);
-				f0.write(line);
-			}
-			System.out.println("received html is saved as result.html in the root");
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			OutputStream dos = new FileOutputStream("RESULTS\\html.html");
+			int count;
+			byte[] buffer = new byte[2048];
+		    while ((count = in.read(buffer)) != -1)
+		    {
+		      dos.write(buffer, 0, count);
+		      dos.flush();
+		    }
+		    dos.close();
+			// in.close();
+			dos.close();
+			System.out.println("received html file is saved as html.html in the root");
 		}
 		/////////////////////////////////////
 		///////////////////////////////text file receive
 		else if (c_type.endsWith("txt")) {
 			//////////////// html file read
-			BufferedReader rd = new BufferedReader(new InputStreamReader(inStream));
-			String line;
-			FileWriter f0 = new FileWriter("RESULTS\\result.txt");
-			while ((line = rd.readLine()) != null) {
-				// System.out.println(line);
-				f0.write(line);
-			}
-			System.out.println("received html is saved as result.html in the root");
+			DataInputStream in = new DataInputStream(socket.getInputStream());
+			OutputStream dos = new FileOutputStream("RESULTS\\text.html");
+			int count;
+			byte[] buffer = new byte[2048];
+		    while ((count = in.read(buffer)) != -1)
+		    {
+		      dos.write(buffer, 0, count);
+		      dos.flush();
+		    }
+		    dos.close();
+			// in.close();
+			dos.close();
+			System.out.println("received text file is saved as text.txt in the root");
 		}
 		/////////////////////////////////////
+		System.out.println("Received what we wanted");
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
