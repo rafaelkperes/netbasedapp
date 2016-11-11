@@ -5,6 +5,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +33,18 @@ public class App {
 	private static final int DEFAULT_PORT = 80;
 	private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
+	public static void processFile(String file) throws IOException{
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		    	System.out.println(line);
+		    }
+		}
+	}
+	
 	static void sendGET(String host, String path, Socket socket) throws IOException {
 		PrintWriter request = null;
+		String filename = "";
 		try {
 			request = new PrintWriter(socket.getOutputStream());
 		} catch (IOException e) {
@@ -57,7 +68,8 @@ public class App {
 		
 		if (c_type.equals("jpg")) {
 			//////////////// image file receive
-			OutputStream dos = new FileOutputStream("RESULTS\\image.jpg");
+			filename = "RESULTS\\image.jpg";
+			OutputStream dos = new FileOutputStream(filename);
 		    while ((count = in.read(buffer)) != -1)
 		    {
 		      dos.write(buffer, 0, count);
@@ -69,7 +81,8 @@ public class App {
 		///////////////////////////////html file receive
 		else if (c_type.endsWith("html")) {
 			//////////////// html file read
-			OutputStream dos = new FileOutputStream("RESULTS\\html.html");
+			filename = "RESULTS\\html.html";
+			OutputStream dos = new FileOutputStream(filename);
 		    while ((count = in.read(buffer)) != -1)
 		    {
 		      dos.write(buffer, 0, count);
@@ -82,7 +95,8 @@ public class App {
 		///////////////////////////////text file receive
 		else if (c_type.endsWith("txt")) {
 			//////////////// html file read
-			OutputStream dos = new FileOutputStream("RESULTS\\text.html");
+			filename = "RESULTS\\text.html";
+			OutputStream dos = new FileOutputStream(filename);
 		    while ((count = in.read(buffer)) != -1)
 		    {
 		      dos.write(buffer, 0, count);
@@ -94,6 +108,7 @@ public class App {
 		/////////////////////////////////////
 		in.close();
 		System.out.println("Received what we wanted");
+		processFile(filename);
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
