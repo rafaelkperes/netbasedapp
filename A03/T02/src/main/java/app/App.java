@@ -18,21 +18,14 @@ public class App {
 			try {
 				File file = new File("dummy.html");
 				long length = file.length();
-				byte[] bytes = new byte[16 * 1024];
-				InputStream in = new FileInputStream(file);
 				ServerSocket srvr = new ServerSocket(1234);
 				Socket skt = srvr.accept();
 				System.out.print("Server has connected!\n");
 				OutputStream out = skt.getOutputStream();
 				//PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
-				System.out.print("Sending string: '" + data + "'\n");
 				//out.print(data);
 				int count;
-		        while ((count = in.read(bytes)) > 0) {
-		            out.write(bytes, 0, count);
-		        }
 				out.close();
-				in.close();
 				skt.close();
 				srvr.close();
 			} catch (Exception e) {
