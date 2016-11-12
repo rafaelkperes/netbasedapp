@@ -144,6 +144,9 @@ public class App {
 	static Socket connect(String host, String path, int port) throws IOException {
 		LOGGER.log(Level.FINE, "Connecting to: {0}:{1}", new Object[] { host, port });
 		Socket clientSocket = new Socket(host, port);
+		if(path == ""){
+			path = "/";
+		}
 		sendGET(host, path, clientSocket);
 		return clientSocket;
 	}
