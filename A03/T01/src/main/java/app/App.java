@@ -34,6 +34,12 @@ public class App {
 
 	private static final int DEFAULT_PORT = 80;
 	private static final Logger LOGGER = Logger.getLogger(App.class.getName());
+	
+	public static int processResponseHeaders(String header){
+		String error_code = header.split(" ")[1];
+		System.out.println(error_code);
+		return 1;
+	}
 
 	static void sendGET(String host, String path, Socket socket) throws IOException {
 		PrintWriter request = null;
@@ -57,6 +63,7 @@ public class App {
 
 		int count, offset;
 		byte[] buffer = new byte[2048];
+		String header = "";
 		DataInputStream in = new DataInputStream(socket.getInputStream());
 
 		if (c_type.equals("jpg")) {
@@ -95,6 +102,7 @@ public class App {
 			    offset = 0;
 			    if(!eohFound){
 			        String string = new String(buffer, 0, count);
+			        header = string;
 			        int indexOfEOH = string.indexOf("\r\n\r\n");
 			        if(indexOfEOH != -1) {
 			            count = count-indexOfEOH-4;
@@ -122,6 +130,7 @@ public class App {
 			    offset = 0;
 			    if(!eohFound){
 			        String string = new String(buffer, 0, count);
+			        header = string;
 			        int indexOfEOH = string.indexOf("\r\n\r\n");
 			        if(indexOfEOH != -1) {
 			            count = count-indexOfEOH-4;
@@ -138,7 +147,34 @@ public class App {
 			System.out.println("received text file is saved as text.txt in RESULTS/");
 		}
 		/////////////////////////////////////
+		else{
+			//////////////// html file read
+			filename = "RESULTS\\notRecognizableFormat";
+			OutputStream dos = new FileOutputStream(filename);
+			boolean eohFound = false;
+			while ((count = in.read(buffer)) != -1)
+			{
+			    offset = 0;
+			    if(!eohFound){
+			        String string = new String(buffer, 0, count);
+			        header = string;
+			        int indexOfEOH = string.indexOf("\r\n\r\n");
+			        if(indexOfEOH != -1) {
+			            count = count-indexOfEOH-4;
+			            offset = indexOfEOH+4;
+			            eohFound = true;
+			        } else {
+			            count = 0;
+			        }
+			    }
+			  dos.write(buffer, offset, count);
+			  dos.flush();
+			}
+			dos.close();
+			System.out.println("not a recognizable format");
+		}
 		in.close();
+		processResponseHeaders(header);
 	}
 
 	static Socket connect(String host, String path, int port) throws IOException {
