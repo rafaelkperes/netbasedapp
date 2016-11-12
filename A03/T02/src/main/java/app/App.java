@@ -29,16 +29,32 @@ public class App {
 		out.close();
 	}
 	
+	public static void sendJPG(File file, Socket skt) throws IOException{
+		String data = "HTTP/1.1 200 OK\nLast-Modified: Fri, 10 Feb 2012 14:31:06 GMT\nContent-Type: image/jpeg\nConnection: Keep-Alive";
+		PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
+		//out.print(data);
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line;
+		out.println(data);
+		out.print("\n");
+	    while ((line = br.readLine()) != null) {
+	        // process the line.
+	    	out.print(line);
+	     }
+		out.close();
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		while (true) {
 			try {
-				File file = new File("dummy.html");
+				File file = new File("dummy.jpg");
 				long length = file.length();
 				ServerSocket srvr = new ServerSocket(1234);
 				Socket skt = srvr.accept();
 				System.out.print("Server has connected!\n");
-				sendHTML(file, skt);
+				//sendHTML(file, skt);
+				sendJPG(file, skt);
 				skt.close();
 				srvr.close();
 			} catch (Exception e) {
