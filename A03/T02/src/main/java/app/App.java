@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import org.apache.commons.io.IOUtils;
+
 public class App {
 
 	public static void sendHTML(File file, Socket skt) throws IOException{
@@ -30,14 +32,17 @@ public class App {
 	}
 	
 	public static void sendJPG(File file, Socket skt) throws IOException{
-		String data = "HTTP/1.1 200 OK\nLast-Modified: Fri, 10 Feb 2012 14:31:06 GMT\nContent-Type: image/jpeg\nConnection: Keep-Alive";
-		//PrintWriter outt = new PrintWriter(skt.getOutputStream(), true);
-		//outt.println(data);
-		//outt.print("\n");
+		String response_header = "HTTP/1.1 200 OK\nLast-Modified: Fri, 10 Feb 2012 14:31:06 GMT\nContent-Type: image/jpeg\nConnection: Keep-Alive";
 		byte[] bytes = new byte[16 * 1024];
 		InputStream in = new FileInputStream(file);
 		OutputStream out = skt.getOutputStream();
 		int count;
+        response_header += "HTTP/1.1 200 OK\r\n";
+        response_header += "Date: " + "\r\n";
+        response_header += "Content-Type: image/png\r\n";
+        response_header += "Content-Length: " + "\r\n";
+        response_header += "Connection: keep-alive\r\n";
+        response_header += "\r\n";
         while ((count = in.read(bytes)) > 0) {
             out.write(bytes, 0, count);
         }
