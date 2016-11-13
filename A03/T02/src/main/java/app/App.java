@@ -31,17 +31,18 @@ public class App {
 	
 	public static void sendJPG(File file, Socket skt) throws IOException{
 		String data = "HTTP/1.1 200 OK\nLast-Modified: Fri, 10 Feb 2012 14:31:06 GMT\nContent-Type: image/jpeg\nConnection: Keep-Alive";
-		PrintWriter out = new PrintWriter(skt.getOutputStream(), true);
-		//out.print(data);
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		String line;
-		out.println(data);
-		out.print("\n");
-	    while ((line = br.readLine()) != null) {
-	        // process the line.
-	    	out.print(line);
-	     }
+		//PrintWriter outt = new PrintWriter(skt.getOutputStream(), true);
+		//outt.println(data);
+		//outt.print("\n");
+		byte[] bytes = new byte[16 * 1024];
+		InputStream in = new FileInputStream(file);
+		OutputStream out = skt.getOutputStream();
+		int count;
+        while ((count = in.read(bytes)) > 0) {
+            out.write(bytes, 0, count);
+        }
 		out.close();
+		in.close();
 	}
 	
 	public static void main(String[] args) {
