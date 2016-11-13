@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 
 import org.apache.commons.io.IOUtils;
 
@@ -43,8 +44,10 @@ public class App {
         response_header += "Content-Length: " + "\r\n";
         response_header += "Connection: keep-alive\r\n";
         response_header += "\r\n";
-        
         System.out.println(response_header);
+        InputStream in_response = IOUtils.toInputStream(response_header, "UTF-8");
+        count = in_response.read(bytes);
+        out.write(bytes, 0, count);
         while ((count = in.read(bytes)) > 0) {
             out.write(bytes, 0, count);
         }
