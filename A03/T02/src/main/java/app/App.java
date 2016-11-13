@@ -43,6 +43,8 @@ public class App {
         response_header += "Content-Length: " + "\r\n";
         response_header += "Connection: keep-alive\r\n";
         response_header += "\r\n";
+        
+        System.out.println(response_header);
         while ((count = in.read(bytes)) > 0) {
             out.write(bytes, 0, count);
         }
