@@ -102,7 +102,7 @@ public class App {
     public static void sendSimpleHeader(Socket skt, String error) throws IOException {
         System.out.println("Response: " + error);
         
-        String response_header = "HTTP/1.1" + error + "\r\n";
+        String response_header = "HTTP/1.1 " + error + "\r\n";
 
         byte[] bytes = new byte[16 * 1024];
         OutputStream out = skt.getOutputStream();
