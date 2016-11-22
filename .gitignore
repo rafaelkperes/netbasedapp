@@ -31,6 +31,10 @@
 # Debug files
 *.dSYM/
 *.su
+
+*.classpath
+*.project
+
 A03/T01/all.log
 
 #folders
