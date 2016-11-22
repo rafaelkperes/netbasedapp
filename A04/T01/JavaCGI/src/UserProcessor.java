@@ -26,33 +26,41 @@ public class UserProcessor {
 		String[] pairs = inBuffer.split("&");
 		for (String pair : pairs) {
 			int idx = pair.indexOf("=");
-			query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"),
-					URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+			query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "ISO-8859-1"),
+					URLDecoder.decode(pair.substring(idx + 1), "ISO-8859-1"));
 
 		}
 		System.out.println(
 				"Full name of user you requested: " + query_pairs.get("firstName") + " " + query_pairs.get("lastName"));
 	}
 
-	public static boolean methGet() {
-		String RequestMethod = System.getenv("REQUEST_METHOD");
-		boolean returnVal = false;
+	public static void readPhoneBook() throws IOException {
+		String line;
+		BufferedReader in;
 
-		if (RequestMethod != null) {
-			if (RequestMethod.equals("GET") || RequestMethod.equals("get")) {
-				returnVal = true;
-			}
+		in = new BufferedReader(new FileReader("phonebook.txt"));
+		line = in.readLine();
+
+		while (line != null) {
+			
+			line = in.readLine();
+			System.out.println(line);
 		}
-
-		return returnVal;
+		
 	}
 
-	public static boolean methPost() {
-		String RequestMethod = System.getenv("REQUEST_METHOD");
+	/*
+	 * public static String searchNumber(String lastName, String firstName){
+	 * String userNumber = null; if((lastName + ","+firstName) == "dds") return
+	 * userNumber; }
+	 */
+
+	public static boolean methGet() {
+		String requestMethod = System.getenv("REQUEST_METHOD");
 		boolean returnVal = false;
 
-		if (RequestMethod != null) {
-			if (RequestMethod.equals("POST") || RequestMethod.equals("post")) {
+		if (requestMethod != null) {
+			if (requestMethod.equals("GET") || requestMethod.equals("get")) {
 				returnVal = true;
 			}
 		}
@@ -67,7 +75,7 @@ public class UserProcessor {
 
 	public static String HtmlTop(String Title) {
 		String Top;
-		Top = "<html>\n<head>\n<title>\n" + Title + "\n</title>\n</head>\n<body>\n";
+		Top = "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<title>\n" + Title + "\n</title>\n</head>\n<body>\n";
 
 		return Top;
 	}
@@ -82,7 +90,7 @@ public class UserProcessor {
 		System.out.println(Header());
 		System.out.println(HtmlTop("User search result"));
 		printQuery(System.in);
-		System.out.println("");
-		System.out.println(HtmlBot());
+/*		readPhoneBook();
+*/		System.out.println(HtmlBot());
 	}
 }
