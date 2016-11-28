@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 public class PhoneBookApplet extends JApplet {
 
+    private static final String DEFAULT_PHONEBOOK_URI = "http://netappsvm.informatik.uni-stuttgart.de/~group07/phonebook.txt";
     private String phonebookURI;
 
     private final String[] columnNames = {
@@ -32,14 +33,24 @@ public class PhoneBookApplet extends JApplet {
 
     @Override
     public void init() {
-        this.phonebookURI = getParameter ("uri");
+        this.phonebookURI = getParameter ("url");
+        /*if(this.phonebookURI == null || phonebookURI.isEmpty()) {
+            this.phonebookURI = DEFAULT_PHONEBOOK_URI;
+        }*/
         //Execute a job on the event-dispatching thread
         try {            
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override
                 public void run() {
                     // Load phone book data from server.
-                    loadPhoneBookData();
+                    try {
+                        loadPhoneBookData();
+                    } catch (Exception e) {
+                        data = new Object[1][columnCnt];
+                        data[0][0] = e.getMessage();
+                        data[0][1] = " ";
+                        data[0][2] = " ";
+                    }
                     // Create the table (GUI) with the phone book data.
                     createGUI();
                 }
@@ -56,42 +67,38 @@ public class PhoneBookApplet extends JApplet {
         setContentPane(scrollPane);
     }
 
-    void loadPhoneBookData() {
+    void loadPhoneBookData() throws Exception {
         // Set data list.
         List<String[]> dataList = new ArrayList<>();
 
-        try {
-            // Load phonebooks.txt
-            URL obj = new URL(phonebookURI);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
+        // Load phonebooks.txt
+        URL obj = new URL(phonebookURI);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestMethod("GET");
 
-            int responseCode = con.getResponseCode();
+        int responseCode = con.getResponseCode();
 
-            if (200 != responseCode) {
-                throw new Exception("Unexpected code returned: " + responseCode);
-            }
+        if (200 != responseCode) {
+            throw new Exception("Unexpected code returned: " + responseCode);
+        }
 
-            
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            
-            String lineStr = null;
-            while((lineStr = in.readLine()) != null) {
-                dataList.add(lineStr.split(","));
+        
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        
+        String lineStr = null;
+        while((lineStr = in.readLine()) != null) {
+            dataList.add(lineStr.split(","));
+        }
+        
+        // Convert to array.
+        data = new Object[dataList.size()][columnCnt];
+        int i = 0;
+        for (String[] line : dataList) {
+            for (int j = 0; j < columnCnt; j++) {
+                data[i][j] = line[j];
             }
-            
-            // Convert to array.
-            data = new Object[dataList.size()][columnCnt];
-            int i = 0;
-            for (String[] line : dataList) {
-                for (int j = 0; j < columnCnt; j++) {
-                    data[i][j] = line[j];
-                }
-                i++;
-            }
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
+            i++;
         }
 
     }
