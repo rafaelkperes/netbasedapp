@@ -18,7 +18,7 @@ Botchen,Ralf,208
 Brenk,Markus,253
 Briones,Jorge Alfonso,230
 Brodbeck,Martin,479
-Bürklen,Susanne,428
+BÃ¼rklen,Susanne,428
 Bungartz,Hans-Joachim,465
 Burger,Peter,447
 Burkhardt,Walter,369
@@ -36,7 +36,7 @@ Draskoczy,Botond,225
 Drees,Robert,293
 Drosdol,Tobias,239
 Dudkowski,Dominique,245
-Dürr,Frank,431
+DÃ¼rr,Frank,431
 Eggenberger,Otto,356
 Eisenbarth,Thomas,345
 Eissele,Mike,246
@@ -50,10 +50,10 @@ Geiger,Jan Michael,227
 Georgescu,Angela,311
 Gherman,Valentin,361
 Giereth,Mark,209
-Göller,Stefan,410
-Gräter,Ute,390
+GÃ¶ller,Stefan,410
+GrÃ¤ter,Ute,390
 Grossmann,Matthias,402
-Gunzenhäuser,Rul,359
+GunzenhÃ¤user,Rul,359
 Guttroff,Martina,417
 Haehner,Joerg,275
 Hakmi,Abdul Wahid,282
