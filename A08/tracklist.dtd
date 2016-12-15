@@ -1,0 +1,35 @@
+<!ELEMENT	tracklist		(track*, interpret*, company*, album*)>
+
+<!ELEMENT	track			(name, track_refs, length, review*)>
+<!ATTLIST	track		id	ID      #REQUIRED
+				style	 (Ragga|Dub|Rock|Funk|Dancehall|Triphop) "Rock">
+<!ELEMENT	name			(#PCDATA)>
+<!ELEMENT	track_refs		EMPTY>
+<!ATTLIST	track_refs	album_ref	IDREF	#IMPLIED
+		                interpret_ref	IDREF	#IMPLIED>
+<!ELEMENT	length			(#PCDATA)>
+<!ELEMENT	review			(#PCDATA | link)*>
+<!ELEMENT	link			(#PCDATA)>
+<!ATTLIST	link	ref	IDREF	#IMPLIED>
+
+<!ELEMENT	album			(name, year)>
+<!ELEMENT	year			(#PCDATA)>
+<!ATTLIST	album		id	ID #REQUIRED
+				company_ref     IDREF  #IMPLIED>
+
+<!ELEMENT	company			(name, adresse?)>
+<!ATTLIST	company		id	ID #REQUIRED>
+<!ELEMENT	adresse			(strasse, ort, land)>
+<!ELEMENT	strasse			(#PCDATA)>
+<!ELEMENT	ort			(#PCDATA)>
+<!ELEMENT	land			(#PCDATA)>
+
+<!ELEMENT	person			(firstname?, name, instrument*)>
+<!ELEMENT	firstname		(#PCDATA)>
+<!ELEMENT	instrument		(#PCDATA)>
+<!ATTLIST	person gender		(male|female) "female">
+
+<!ELEMENT	interpret		(band | soloartist)>
+<!ATTLIST	interpret	id	ID	#REQUIRED>
+<!ELEMENT	band			(name, person+)>
+<!ELEMENT	soloartist		(person)>

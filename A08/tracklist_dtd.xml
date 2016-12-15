@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tracklist [
+
+<!ELEMENT	tracklist		(track*, interpret*, company*, album*)>
+
+<!ELEMENT	track			(name, track_refs, length, review*)>
+<!ATTLIST	track		id	ID      #REQUIRED
+				style	 (Ragga|Dub|Rock|Funk|Dancehall|Triphop) "Rock">
+<!ELEMENT	name			(#PCDATA)>
+<!ELEMENT	track_refs		EMPTY>
+<!ATTLIST	track_refs	album_ref	IDREF	#IMPLIED
+		                interpret_ref	IDREF	#IMPLIED>
+<!ELEMENT	length			(#PCDATA)>
+<!ELEMENT	review			(#PCDATA | link)*>
+<!ELEMENT	link			(#PCDATA)>
+<!ATTLIST	link	ref	IDREF	#IMPLIED>
+
+<!ELEMENT	album			(name, year)>
+<!ELEMENT	year			(#PCDATA)>
+<!ATTLIST	album		id	ID #REQUIRED
+				company_ref     IDREF  #IMPLIED>
+
+<!ELEMENT	company			(name, adresse?)>
+<!ATTLIST	company		id	ID #REQUIRED>
+<!ELEMENT	adresse			(strasse, ort, land)>
+<!ELEMENT	strasse			(#PCDATA)>
+<!ELEMENT	ort			(#PCDATA)>
+<!ELEMENT	land			(#PCDATA)>
+
+<!ELEMENT	person			(firstname?, name, instrument*)>
+<!ELEMENT	firstname		(#PCDATA)>
+<!ELEMENT	instrument		(#PCDATA)>
+<!ATTLIST	person gender		(male|female) "female">
+
+<!ELEMENT	interpret		(band | soloartist)>
+<!ATTLIST	interpret	id	ID	#REQUIRED>
+<!ELEMENT	band			(name, person+)>
+<!ELEMENT	soloartist		(person)>
+
+]>
+<tracklist>
+ <track id="track_gia">
+  <name>Give it away</name>
+  <track_refs album_ref="album_bssm" interpret_ref="inter_rhcp" />
+  <length>4:43</length>
+  <review>The first single off the Red Hot Chili Peppers' quadruple-platinum smash Blood Sugar Sex Magik, "Give It Away" didn't achieve the massive pop success of its follow-up, <link ref="track_utb">"Under the Bridge,"</link> barely peaking in the Top 75, but it did become one of the band's most instantly recognizable songs, thanks mostly to Anthony Kiedis' nonsensical raps, Flea's jumping, sliding, popping bass line, and Pete Weiss' jew's-harp boinging away in the background.</review>
+ </track>
+
+ <track id="track_utb">
+  <name>Under the bridge</name>
+  <track_refs album_ref="album_bssm" interpret_ref="inter_rhcp" />
+  <length>4:24</length>
+ </track>
+
+ <interpret id="inter_rhcp">
+  <band>
+   <name>Red Hot Chilli Peppers</name>
+   <person>
+    <firstname>Anthony</firstname>
+    <name>Kiedis</name>
+    <instrument>Vocals</instrument>
+   </person>
+   <person>
+    <name>Flea</name>
+   </person>
+   <person>
+    <firstname>John</firstname>
+    <name>Frusciante</name>
+    <instrument>Guitar</instrument>
+   </person>
+   <person>
+    <firstname>Chad</firstname>
+    <name>Smith</name>
+    <instrument>Drums</instrument>
+   </person>
+  </band>
+ </interpret>
+
+ <company id="comp_warner">
+  <name>Warner</name>
+ </company>
+
+ <album id="album_bssm" company_ref="comp_warner">
+  <name>Blood Sugar Sex Magik</name>
+  <year>1991</year>
+ </album>
+</tracklist>
