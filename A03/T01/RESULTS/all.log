@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="windows-1251" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2016-11-23T17:49:34</date>
+  <millis>1479919774161</millis>
+  <sequence>0</sequence>
+  <logger>app.App</logger>
+  <level>FINE</level>
+  <class>app.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>Main called with args: {0}</message>
+</record>
+<record>
+  <date>2016-11-23T17:49:34</date>
+  <millis>1479919774204</millis>
+  <sequence>1</sequence>
+  <logger>app.App</logger>
+  <level>FINER</level>
+  <class>app.App</class>
+  <method>start</method>
+  <thread>1</thread>
+  <message>Start called with args: {0}</message>
+</record>
+<record>
+  <date>2016-11-23T17:49:41</date>
+  <millis>1479919781569</millis>
+  <sequence>2</sequence>
+  <logger>app.App</logger>
+  <level>SEVERE</level>
+  <class>app.App</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>java.net.MalformedURLException: no protocol: 
+	at java.net.URL.&lt;init&gt;(Unknown Source)
+	at java.net.URL.&lt;init&gt;(Unknown Source)
+	at java.net.URL.&lt;init&gt;(Unknown Source)
+	at app.App.start(App.java:142)
+	at app.App.main(App.java:164)
+</message>
+</record>
+</log>
