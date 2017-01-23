@@ -1,0 +1,122 @@
+Task1
+
+Query_A:
+fn:doc ('xmlshop.xml')//CD/Title
+fn:doc ('xmlshop.xml')/child::Shop/child::CDs/child::CD/child::Title
+
+Query_B:
+fn:doc('xmlshop.xml')//Title
+fn:doc('xmlshop.xml')/descentant-or-self::node()/child::Title
+
+Query_C:
+
+
+
+Query_D:
+fn:doc('xmlshop.xml') //Book[Price>9.0]/Title
+fn:doc('xmlshop.xml') /child::Shop/child::Books/child::Book[Price>9.0]/child::Title
+
+Query_E:
+fn:count(fn:doc('xmlshop.xml') /Shop/Books/Book)
+fn:count(fn:doc('xmlshop.xml') /child::Shop/child::Books/child::Book)
+
+Query_F:
+fn:sum(fn:doc('xmlshop.xml') /Shop/CDs/CD[Genre="Rock"]/Price)
+fn:sum(fn:doc('xmlshop.xml') /child::Shop/child::CDs/child::CD[child::Genre="Rock"]/child::Price)
+
+Query_G:
+fn:doc('xmlshop.xml') //Book[attribute::ID="BOOK_ID_3"]
+fn:doc('xmlshop.xml') /child::Shop/child::Books/child::Book[attribute::ID="BOOK_ID_3"]
+
+Task2
+
+Query_A:
+let $res:=(fn:reverse(fn:doc ('xmlshop.xml') //Books/Book/Title))
+return $res
+
+Query_B:
+let $res:=(fn:subsequence((fn:doc ('xmlshop.xml') //CDs/CD/Title) ,5 ,10))
+return $res
+
+Query_C:
+let $res:=(fn:insert-before((fn:doc ('xmlshop.xml') //Books/Book/Title),fn:index-of((fn:doc ('xmlshop.xml') //Books/Book/Title),<Title>Breaking Dawn</Title>)+1,(<Title>Midnight Sun</Title>)))
+return $res
+
+Query_D:
+let $res:=(fn:distinct-values((fn:doc ('xmlshop.xml') //Price)))
+return $res
+
+Query_E:
+let $res:=(fn:doc ('xmlshop.xml') //CD)
+return $res
+
+Result is:
+
+21st Century Breakdown200913.95COMP_ID_3IndieGreen DayPERS_ID_1PERS_ID_2PERS_ID_3
+Mtv Unplugged in New York200917.95COMP_ID_4RockSportfreunde StillerPERS_ID_4PERS_ID_5PERS_ID_6
+American Idiot20048.95COMP_ID_3IndieGreen DayPERS_ID_1PERS_ID_2PERS_ID_3
+1200011.95COMP_ID_5Rockthe BeatlesPERS_ID_7PERS_ID_8PERS_ID_9PERS_ID_10
+Stadtaffe200913.97COMP_ID_10Hip_HopPERS_ID_21
+Foot of the Mountain200914.95COMP_ID_11PopA-HaPERS_ID_22PERS_ID_23PERS_ID_24
+Battle for the Sun200913.95COMP_ID_12RockPlaceboPERS_ID_25PERS_ID_26PERS_ID_27
+Do or Die200912.95COMP_ID_11RockThe BosshossPERS_ID_28PERS_ID_29PERS_ID_30PERS_ID_31PERS_ID_32PERS_ID_33PERS_ID_34
+Next!200518.95COMP_ID_10ReggaeSeeedPERS_ID_21PERS_ID_35PERS_ID_36
+Let It Roll: Songs Of George Harrison200915.95COMP_ID_6RockPERS_ID_9
+Jazz ist anders200714.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Unplugged - Rock'n'Roll Realschule200217.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Geräusch200321.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+13199518.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Wir Wollen Nur Deine Seele199922.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Endlich Urlaub!200114.45COMP_ID_11PopPERS_ID_37
+Am Ende der Sonne200514.45COMP_ID_11PopPERS_ID_37
+Die Wahrheit übers Lügen200816.95COMP_ID_11PopPERS_ID_37
+Bingo200614.45COMP_ID_13RockPERS_ID_38
+System of a Down19987.45COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Toxicity20047.45COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Steal This Album!20047.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Mezmerize20057.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Hypnotize20057.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Elect the Dead200818.95COMP_ID_10MetalPERS_ID_41
+Scars on Broadway200817.95COMP_ID_11MetalScars on BroadwayPERS_ID_42PERS_ID_44PERS_ID_45PERS_ID_46PERS_ID_47
+
+
+let $res:=(fn:data(fn:doc ('xmlshop.xml') //CD))
+return $res
+
+Result is:
+
+21st Century Breakdown200913.95COMP_ID_3IndieGreen DayPERS_ID_1PERS_ID_2PERS_ID_3
+Mtv Unplugged in New York200917.95COMP_ID_4RockSportfreunde StillerPERS_ID_4PERS_ID_5PERS_ID_6
+American Idiot20048.95COMP_ID_3IndieGreen DayPERS_ID_1PERS_ID_2PERS_ID_3
+1200011.95COMP_ID_5Rockthe BeatlesPERS_ID_7PERS_ID_8PERS_ID_9PERS_ID_10
+Stadtaffe200913.97COMP_ID_10Hip_HopPERS_ID_21
+Foot of the Mountain200914.95COMP_ID_11PopA-HaPERS_ID_22PERS_ID_23PERS_ID_24
+Battle for the Sun200913.95COMP_ID_12RockPlaceboPERS_ID_25PERS_ID_26PERS_ID_27
+Do or Die200912.95COMP_ID_11RockThe BosshossPERS_ID_28PERS_ID_29PERS_ID_30PERS_ID_31PERS_ID_32PERS_ID_33PERS_ID_34
+Next!200518.95COMP_ID_10ReggaeSeeedPERS_ID_21PERS_ID_35PERS_ID_36
+Let It Roll: Songs Of George Harrison200915.95COMP_ID_6RockPERS_ID_9
+Jazz ist anders200714.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Unplugged - Rock'n'Roll Realschule200217.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Geräusch200321.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+13199518.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Wir Wollen Nur Deine Seele199922.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
+Endlich Urlaub!200114.45COMP_ID_11PopPERS_ID_37
+Am Ende der Sonne200514.45COMP_ID_11PopPERS_ID_37
+Die Wahrheit übers Lügen200816.95COMP_ID_11PopPERS_ID_37
+Bingo200614.45COMP_ID_13RockPERS_ID_38
+System of a Down19987.45COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Toxicity20047.45COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Steal This Album!20047.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Mezmerize20057.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Hypnotize20057.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
+Elect the Dead200818.95COMP_ID_10MetalPERS_ID_41
+Scars on Broadway200817.95COMP_ID_11MetalScars on BroadwayPERS_ID_42PERS_ID_44PERS_ID_45PERS_ID_46PERS_ID_47
+
+
+let $res:=fn:compare((fn:data(fn:doc ('xmlshop.xml') //CD)),(fn:doc ('xmlshop.xml') //CD))
+return $res
+
+
+Query_F:
+let $res:=(fn:doc ('xmlshop.xml') //.[fn:name()[fn:contains(., 'name') or fn:contains(., 'Name')]]/text() )
+return $res
