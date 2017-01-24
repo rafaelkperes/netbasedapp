@@ -1,4 +1,4 @@
-Task1
+﻿Task1
 
 Query_A:
 fn:doc ('xmlshop.xml')//CD/Title
@@ -33,6 +33,9 @@ Task2
 Query_A:
 let $res:=(fn:reverse(fn:doc ('xmlshop.xml') //Books/Book/Title))
 return $res
+
+for $books in doc("xmlshop.xml")/Books
+return fn:reverse($book/title)
 
 Query_B:
 let $res:=(fn:subsequence((fn:doc ('xmlshop.xml') //CDs/CD/Title) ,5 ,10))
