@@ -1,0 +1,94 @@
+Task1
+
+Query_A:
+let $doc := fn:doc('xmlshop.xml')
+for $p in $doc/Shop/Persons/Person
+let $albums := fn:count($p/Albums/Album)
+let $books := fn:count($p/Books/Book)
+let $films := fn:count($p/Films/Film)
+return <person> {$p/Surname} {$p/Forename}  <products>{ $albums + $books + $films }</products> </person>
+
+Query_B:
+let $doc := fn:doc('xmlshop.xml')
+let $products := fn:count($doc//Person/Books/Book) + fn:count($doc//Person/Films/Film) + fn:count($doc//Person/Albums/Album)
+let $people := fn:count($doc//Person)
+return $products div $people
+
+Query_C:
+let $doc := fn:doc('xmlshop.xml')
+let $actors := $doc//Actor
+let $directors := $doc//Director
+for $p in $doc/Shop/Persons/Person
+where $p/@ID = $actors and $p/@ID = $directors
+return $p
+
+Query_D:
+let $doc := fn:doc('xmlshop.xml')
+for $c in $doc//Companies/Company
+where $c/Products/Albums and not($c/Products/Films) and not($c/Products/Books)
+return $c
+
+Query_E:
+let $doc := fn:doc('xmlshop.xml')
+let $germanCompany := $doc//Company[GermanAddress]
+let $cd := $doc//CD[Distributor = $germanCompany/@ID]
+let $res := fn:distinct-values($doc//Person[Albums/Album = $cd/@ID]/@ID)
+for $p in $doc//Person
+where $p/@ID = $res
+return $p
+
+Query_F:
+let $doc := fn:doc('xmlshop.xml')
+let $genres := fn:distinct-values($doc//CD/Genre)
+for $genre in $genres
+let $cd := $doc//CD[Genre = $genre]
+return <Result><Genre>{$genre}</Genre><Price>{fn:avg($cd/Price)}</Price></Result>
+
+Query_G:
+
+
+Query_H:
+let $doc := fn:doc('xmlshop.xml')
+let $minPrice := fn:min($doc//Price)
+let $book := $doc//Book[Price = $minPrice]
+let $cd := $doc//CD[Price = $minPrice]
+let $film := $doc//Film[Price = $minPrice]
+return ($book, $cd, $film)
+
+Query_I:
+let $doc := fn:doc('xmlshop.xml')
+let $minPrice := fn:min($doc//Price)
+let $book := $doc//Book[Price = $minPrice]
+let $cd := $doc//CD[Price = $minPrice]
+let $film := $doc//Film[Price = $minPrice]
+let $result := ($book, $cd, $film)
+let $type := fn:node-name($result)
+return $type
+
+Query_J:
+let $doc := fn:doc('xmlshop.xml')
+let $bIds := fn:distinct-values($doc//Person[fn:count(Books/Book) > 1]/Books/Book)
+for $book in $doc/Shop/Books/Book
+where $book/@ID = $bIds
+return $book
+
+Query_K:
+<QueryResult> {
+let $doc := fn:doc('xmlshop.xml')
+let $bIds := fn:distinct-values($doc//Person[fn:count(Books/Book) > 1]/Books/Book)
+for $book in $doc/Shop/Books/Book
+return <Position>{$book/Title}{$book/Price}</Position>
+}</QueryResult>
+
+Query_L:
+<QueryResult> {
+let $doc := fn:doc('xmlshop.xml')
+let $bIds := fn:distinct-values($doc//Person[fn:count(Books/Book) > 1]/Books/Book)
+for $book in $doc/Shop/Books/Book
+order by $book/Title
+return <Position>{$book/Title}{$book/Price}</Position>
+}</QueryResult>
+
+Query_M:
+
+Query_N:
