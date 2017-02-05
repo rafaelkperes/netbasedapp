@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Initial comment -->
+<people xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="people.xsd">
+ <!-- This ist the first person! -->
+ <person born="1914" deceased="1952">
+  <name>
+   <firstname>
+     Alan
+   </firstname>
+   <lastname>
+     Turing
+   </lastname>
+  </name>
+  <job>
+   Mathematician
+  </job>
+  <job>
+    Compu<!-- Splitting comment -->ter Scientist
+  </job>
+ </person>
+ <person born="1916" deceased="1988">
+  <name>
+   <firstname>Richard</firstname>
+   <lastname>Feynman</lastname>
+  </name>
+  <job>Physicist</job>
+ </person>
+ <!-- This was the last person -->
+</people>

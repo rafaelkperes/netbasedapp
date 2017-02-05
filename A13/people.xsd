@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"> 
+  <xs:element name="people">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="person" type="personType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="personType">
+    <xs:sequence>
+      <xs:element name="name" type="nameType"/>
+      <xs:element ref="job" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="born" type="xs:string"/>
+    <xs:attribute name="deceased" type="xs:string" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="nameType">
+    <xs:sequence>
+      <xs:element ref="firstname"/>
+      <xs:element ref="lastname"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="firstname" type="xs:string"/>
+  <xs:element name="lastname" type="xs:string"/>
+  <xs:element name="job" type="xs:string"/>
+</xs:schema>

@@ -1,4 +1,4 @@
-﻿Task1
+Task1
 
 Query_A:
 fn:doc ('xmlshop.xml')//CD/Title
@@ -6,11 +6,11 @@ fn:doc ('xmlshop.xml')/child::Shop/child::CDs/child::CD/child::Title
 
 Query_B:
 fn:doc('xmlshop.xml')//Title
-fn:doc('xmlshop.xml')/descentant-or-self::node()/child::Title
+fn:doc('xmlshop.xml')/descendant-or-self::node()/child::Title
 
 Query_C:
-
-
+fn:doc('xmlshop.xml')//Book/Authors/Author[1]
+fn:doc('xmlshop.xml') /child::Shop/child::Books/child::Book/child::Authors/child::Author[1]
 
 Query_D:
 fn:doc('xmlshop.xml') //Book[Price>9.0]/Title
@@ -34,16 +34,23 @@ Query_A:
 let $res:=(fn:reverse(fn:doc ('xmlshop.xml') //Books/Book/Title))
 return $res
 
-for $books in doc("xmlshop.xml")/Books
-return fn:reverse($book/title)
+for $books in fn:doc('xmlshop.xml')//Books
+return fn:reverse($books/Book/Title)
 
 Query_B:
 let $res:=(fn:subsequence((fn:doc ('xmlshop.xml') //CDs/CD/Title) ,5 ,10))
 return $res
 
+for $cds in fn:doc('xmlshop.xml')//CDs
+return fn:subsequence($cds/CD/Title, 5, 10)
+
 Query_C:
 let $res:=(fn:insert-before((fn:doc ('xmlshop.xml') //Books/Book/Title),fn:index-of((fn:doc ('xmlshop.xml') //Books/Book/Title),<Title>Breaking Dawn</Title>)+1,(<Title>Midnight Sun</Title>)))
 return $res
+
+let $doc := fn:doc ('xmlshop.xml')
+let $bdIndex:= fn:index-of($doc//Books/Book/Title, <Title>Breaking Dawn</Title>)
+return fn:insert-before($doc//Books/Book/Title, $bdIndex + 1, <Title>Midnight Sun</Title>)
 
 Query_D:
 let $res:=(fn:distinct-values((fn:doc ('xmlshop.xml') //Price)))
@@ -55,32 +62,32 @@ return $res
 
 Result is:
 
-21st Century Breakdown200913.95COMP_ID_3IndieGreen DayPERS_ID_1PERS_ID_2PERS_ID_3
-Mtv Unplugged in New York200917.95COMP_ID_4RockSportfreunde StillerPERS_ID_4PERS_ID_5PERS_ID_6
-American Idiot20048.95COMP_ID_3IndieGreen DayPERS_ID_1PERS_ID_2PERS_ID_3
-1200011.95COMP_ID_5Rockthe BeatlesPERS_ID_7PERS_ID_8PERS_ID_9PERS_ID_10
-Stadtaffe200913.97COMP_ID_10Hip_HopPERS_ID_21
-Foot of the Mountain200914.95COMP_ID_11PopA-HaPERS_ID_22PERS_ID_23PERS_ID_24
-Battle for the Sun200913.95COMP_ID_12RockPlaceboPERS_ID_25PERS_ID_26PERS_ID_27
-Do or Die200912.95COMP_ID_11RockThe BosshossPERS_ID_28PERS_ID_29PERS_ID_30PERS_ID_31PERS_ID_32PERS_ID_33PERS_ID_34
-Next!200518.95COMP_ID_10ReggaeSeeedPERS_ID_21PERS_ID_35PERS_ID_36
-Let It Roll: Songs Of George Harrison200915.95COMP_ID_6RockPERS_ID_9
-Jazz ist anders200714.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
-Unplugged - Rock'n'Roll Realschule200217.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
-Geräusch200321.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
-13199518.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
-Wir Wollen Nur Deine Seele199922.95COMP_ID_11RockDie ÄrztePERS_ID_37PERS_ID_38PERS_ID_39
-Endlich Urlaub!200114.45COMP_ID_11PopPERS_ID_37
-Am Ende der Sonne200514.45COMP_ID_11PopPERS_ID_37
-Die Wahrheit übers Lügen200816.95COMP_ID_11PopPERS_ID_37
-Bingo200614.45COMP_ID_13RockPERS_ID_38
-System of a Down19987.45COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
-Toxicity20047.45COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
-Steal This Album!20047.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
-Mezmerize20057.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
-Hypnotize20057.95COMP_ID_15MetalSystem of a DownPERS_ID_41PERS_ID_42PERS_ID_43PERS_ID_44
-Elect the Dead200818.95COMP_ID_10MetalPERS_ID_41
-Scars on Broadway200817.95COMP_ID_11MetalScars on BroadwayPERS_ID_42PERS_ID_44PERS_ID_45PERS_ID_46PERS_ID_47
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_1"><Title>21st Century Breakdown</Title><Year>2009</Year><Price>13.95</Price><Distributor>COMP_ID_3</Distributor><Genre>Indie</Genre><Band><Name>Green Day</Name><Member>PERS_ID_1</Member><Member>PERS_ID_2</Member><Member>PERS_ID_3</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_2"><Title>Mtv Unplugged in New York</Title><Year>2009</Year><Price>17.95</Price><Distributor>COMP_ID_4</Distributor><Genre>Rock</Genre><Band><Name>Sportfreunde Stiller</Name><Member>PERS_ID_4</Member><Member>PERS_ID_5</Member><Member>PERS_ID_6</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_3"><Title>American Idiot</Title><Year>2004</Year><Price>8.95</Price><Distributor>COMP_ID_3</Distributor><Genre>Indie</Genre><Band><Name>Green Day</Name><Member>PERS_ID_1</Member><Member>PERS_ID_2</Member><Member>PERS_ID_3</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_4"><Title>1</Title><Year>2000</Year><Price>11.95</Price><Distributor>COMP_ID_5</Distributor><Genre>Rock</Genre><Band><Name>the Beatles</Name><Member>PERS_ID_7</Member><Member>PERS_ID_8</Member><Member>PERS_ID_9</Member><Member>PERS_ID_10</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_5"><Title>Stadtaffe</Title><Year>2009</Year><Price>13.97</Price><Distributor>COMP_ID_10</Distributor><Genre>Hip_Hop</Genre><Soloartist>PERS_ID_21</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_6"><Title>Foot of the Mountain</Title><Year>2009</Year><Price>14.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Pop</Genre><Band><Name>A-Ha</Name><Member>PERS_ID_22</Member><Member>PERS_ID_23</Member><Member>PERS_ID_24</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_7"><Title>Battle for the Sun</Title><Year>2009</Year><Price>13.95</Price><Distributor>COMP_ID_12</Distributor><Genre>Rock</Genre><Band><Name>Placebo</Name><Member>PERS_ID_25</Member><Member>PERS_ID_26</Member><Member>PERS_ID_27</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_8"><Title>Do or Die</Title><Year>2009</Year><Price>12.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Rock</Genre><Band><Name>The Bosshoss</Name><Member>PERS_ID_28</Member><Member>PERS_ID_29</Member><Member>PERS_ID_30</Member><Member>PERS_ID_31</Member><Member>PERS_ID_32</Member><Member>PERS_ID_33</Member><Member>PERS_ID_34</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_9"><Title>Next!</Title><Year>2005</Year><Price>18.95</Price><Distributor>COMP_ID_10</Distributor><Genre>Reggae</Genre><Band><Name>Seeed</Name><Member>PERS_ID_21</Member><Member>PERS_ID_35</Member><Member>PERS_ID_36</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_10"><Title>Let It Roll: Songs Of George Harrison</Title><Year>2009</Year><Price>15.95</Price><Distributor>COMP_ID_6</Distributor><Genre>Rock</Genre><Soloartist>PERS_ID_9</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_11"><Title>Jazz ist anders</Title><Year>2007</Year><Price>14.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Rock</Genre><Band><Name>Die Ärzte</Name><Member>PERS_ID_37</Member><Member>PERS_ID_38</Member><Member>PERS_ID_39</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_12"><Title>Unplugged - Rock'n'Roll Realschule</Title><Year>2002</Year><Price>17.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Rock</Genre><Band><Name>Die Ärzte</Name><Member>PERS_ID_37</Member><Member>PERS_ID_38</Member><Member>PERS_ID_39</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_13"><Title>Geräusch</Title><Year>2003</Year><Price>21.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Rock</Genre><Band><Name>Die Ärzte</Name><Member>PERS_ID_37</Member><Member>PERS_ID_38</Member><Member>PERS_ID_39</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_14"><Title>13</Title><Year>1995</Year><Price>18.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Rock</Genre><Band><Name>Die Ärzte</Name><Member>PERS_ID_37</Member><Member>PERS_ID_38</Member><Member>PERS_ID_39</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_15"><Title>Wir Wollen Nur Deine Seele</Title><Year>1999</Year><Price>22.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Rock</Genre><Band><Name>Die Ärzte</Name><Member>PERS_ID_37</Member><Member>PERS_ID_38</Member><Member>PERS_ID_39</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_16"><Title>Endlich Urlaub!</Title><Year>2001</Year><Price>14.45</Price><Distributor>COMP_ID_11</Distributor><Genre>Pop</Genre><Soloartist>PERS_ID_37</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_17"><Title>Am Ende der Sonne</Title><Year>2005</Year><Price>14.45</Price><Distributor>COMP_ID_11</Distributor><Genre>Pop</Genre><Soloartist>PERS_ID_37</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_18"><Title>Die Wahrheit übers Lügen</Title><Year>2008</Year><Price>16.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Pop</Genre><Soloartist>PERS_ID_37</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_19"><Title>Bingo</Title><Year>2006</Year><Price>14.45</Price><Distributor>COMP_ID_13</Distributor><Genre>Rock</Genre><Soloartist>PERS_ID_38</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_20"><Title>System of a Down</Title><Year>1998</Year><Price>7.45</Price><Distributor>COMP_ID_15</Distributor><Genre>Metal</Genre><Band><Name>System of a Down</Name><Member>PERS_ID_41</Member><Member>PERS_ID_42</Member><Member>PERS_ID_43</Member><Member>PERS_ID_44</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_21"><Title>Toxicity</Title><Year>2004</Year><Price>7.45</Price><Distributor>COMP_ID_15</Distributor><Genre>Metal</Genre><Band><Name>System of a Down</Name><Member>PERS_ID_41</Member><Member>PERS_ID_42</Member><Member>PERS_ID_43</Member><Member>PERS_ID_44</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_22"><Title>Steal This Album!</Title><Year>2004</Year><Price>7.95</Price><Distributor>COMP_ID_15</Distributor><Genre>Metal</Genre><Band><Name>System of a Down</Name><Member>PERS_ID_41</Member><Member>PERS_ID_42</Member><Member>PERS_ID_43</Member><Member>PERS_ID_44</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_23"><Title>Mezmerize</Title><Year>2005</Year><Price>7.95</Price><Distributor>COMP_ID_15</Distributor><Genre>Metal</Genre><Band><Name>System of a Down</Name><Member>PERS_ID_41</Member><Member>PERS_ID_42</Member><Member>PERS_ID_43</Member><Member>PERS_ID_44</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_24"><Title>Hypnotize</Title><Year>2005</Year><Price>7.95</Price><Distributor>COMP_ID_15</Distributor><Genre>Metal</Genre><Band><Name>System of a Down</Name><Member>PERS_ID_41</Member><Member>PERS_ID_42</Member><Member>PERS_ID_43</Member><Member>PERS_ID_44</Member></Band></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_25"><Title>Elect the Dead</Title><Year>2008</Year><Price>18.95</Price><Distributor>COMP_ID_10</Distributor><Genre>Metal</Genre><Soloartist>PERS_ID_41</Soloartist></CD>
+<CD xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="CD_ID_26"><Title>Scars on Broadway</Title><Year>2008</Year><Price>17.95</Price><Distributor>COMP_ID_11</Distributor><Genre>Metal</Genre><Band><Name>Scars on Broadway</Name><Member>PERS_ID_42</Member><Member>PERS_ID_44</Member><Member>PERS_ID_45</Member><Member>PERS_ID_46</Member><Member>PERS_ID_47</Member></Band></CD>
 
 
 let $res:=(fn:data(fn:doc ('xmlshop.xml') //CD))

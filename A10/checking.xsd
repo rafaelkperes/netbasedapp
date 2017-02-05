@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="checking_account" type="checking_account"
+        substitutionGroup="account"/>
+    
+    <xs:complexType name="checking_account">
+        <xs:sequence>
+            <xs:element name="balance" type="balanceInteger" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:NCName" use="required"/>       
+    </xs:complexType>
+
+</xs:schema>

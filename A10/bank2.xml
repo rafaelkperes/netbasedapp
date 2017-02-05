@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bank>
+<bank xmlns="http://acmebank.com/bank" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:schemaLocation="http://acmebank.com/bank bank.xsd
+			http://acmebank.com/bank/savings savings.xsd
+			http://acmebank.com/bank/checking checking.xsd">
   
   <accounts>
     <savings_account id="a1" interest="0.03">
